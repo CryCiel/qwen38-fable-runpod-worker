@@ -4,7 +4,7 @@ FROM nvidia/cuda:12.8.1-devel-ubuntu24.04 AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git cmake ninja-build build-essential \
-    libcurl4-openssl-dev ca-certificates \
+    libcurl4-openssl-dev libssl-dev ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt
@@ -21,6 +21,7 @@ RUN git clone https://github.com/ggml-org/llama.cpp.git \
        -DGGML_CUDA=ON \
        -DCMAKE_CUDA_ARCHITECTURES=120a-real \
        -DLLAMA_CURL=ON \
+       -DLLAMA_OPENSSL=ON \
        -DCMAKE_EXE_LINKER_FLAGS="-Wl,-rpath-link,/usr/local/cuda/lib64/stubs -L/usr/local/cuda/lib64/stubs -lcuda" \
        -DCMAKE_SHARED_LINKER_FLAGS="-L/usr/local/cuda/lib64/stubs -lcuda" \
     && cmake --build build --parallel 8 --target llama-server
@@ -35,7 +36,7 @@ ENV LD_LIBRARY_PATH=/app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 python3-pip python3-venv \
-    bash curl ca-certificates libcurl4 libgomp1 \
+    bash curl ca-certificates libcurl4 libssl3t64 libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /work
