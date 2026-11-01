@@ -1,0 +1,66 @@
+{
+  "title": "Qwen3.8 Fable Uncensored - Blackwell 96GB",
+  "description": "RunPod worker for RTX PRO 6000 Blackwell MaxQ, Server, and WK 96GB",
+  "type": "serverless",
+  "category": "language",
+  "iconUrl": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/media/llama1-icon-transparent.png",
+  "config": {
+    "runsOn": "GPU",
+    "gpuCount": 1,
+    "gpuIds": "BLACKWELL_96",
+    "containerDiskInGb": 32,
+    "presets": [],
+    "env": [
+      {
+        "key": "LLAMA_SERVER_CMD_ARGS",
+        "input": {
+          "name": "llama-server runtime arguments",
+          "type": "string",
+          "description": "Experimental 260K context with q8 KV caches, verify at runtime",
+          "default": "--ctx-size 262144 --n-gpu-layers 99 --parallel 1 --flash-attn on --cache-type-k q8_0 --cache-type-v q8_0 --reasoning off",
+          "advanced": false
+        }
+      },
+      {
+        "key": "LLAMA_CACHED_MODEL",
+        "input": {
+          "name": "Cached Hugging Face repo",
+          "type": "string",
+          "description": "Download into new RunPod volume before worker starts",
+          "default": "DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF",
+          "advanced": true
+        }
+      },
+      {
+        "key": "LLAMA_CACHED_GGUF_PATH",
+        "input": {
+          "name": "Cached GGUF filename",
+          "type": "string",
+          "description": "Standard Q6_K, not MTP",
+          "default": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-Q6_K.gguf",
+          "advanced": true
+        }
+      },
+      {
+        "key": "MAX_CONCURRENCY",
+        "input": {
+          "name": "Maximum concurrency",
+          "type": "number",
+          "description": "Single user long context",
+          "default": 1,
+          "advanced": true
+        }
+      },
+      {
+        "key": "LLAMA_STARTUP_TIMEOUT",
+        "input": {
+          "name": "Model initialization timeout",
+          "type": "number",
+          "description": "Seconds",
+          "default": 600,
+          "advanced": true
+        }
+      }
+    ]
+  }
+}

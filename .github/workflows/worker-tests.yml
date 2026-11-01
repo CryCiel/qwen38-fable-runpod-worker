@@ -1,0 +1,31 @@
+name: RunPod worker checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: python -m pip install "openai==2.41.1" "python-dotenv==1.2.2"
+      - name: Syntax and configuration validation
+        run: |
+          python -m compileall -q src tests
+          bash -n src/start.sh
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j = json.loads(Path(".runpod/hub.json").read_text())
+          assert j["config"]["gpuIds"] == "BLACKWELL_96"
+          assert "120a-real" in Path("Dockerfile").read_text()
+          e = {x["key"]: x["input"]["default"] for x in j["config"]["env"]}
+          assert e["LLAMA_CACHED_GGUF_PATH"].endswith("Q6_K.gguf")
+          assert "--ctx-size 262144" in e["LLAMA_SERVER_CMD_ARGS"]
+          PY
+      - name: Python regression tests
+        run: python -m unittest discover -s tests -v
