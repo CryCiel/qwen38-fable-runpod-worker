@@ -12,7 +12,6 @@ GGUF = "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-Q6_K.gguf"
 DEFAULT_REPO_NAME = "qwen38-fable-q6k-cache"
 
 MODEL_CARD = """---
-license: apache-2.0
 tags:
 - gguf
 - qwen3_8
